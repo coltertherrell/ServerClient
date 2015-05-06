@@ -19,7 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class Client 
+public class Client implements Runnable
 {
 	
 	private static final int PORT = 1234;
@@ -113,6 +113,12 @@ public class Client
 				}
 			}
 		});
+	}
+
+	@Override
+	public void run() {
+		// TODO 
+		
 	}
 
 }
