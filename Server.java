@@ -19,7 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class Server 
+public class Server implements Runnable
 {
 	private static final int PORT = 1234;
 	public static int totalConnections = 0;
@@ -53,7 +53,9 @@ public class Server
 		serverMainFrame.setVisible(true);
 		serverMainFrame.pack();
 		
-		final ServerSocket server = new ServerSocket(PORT);
+		final Server server = new Server();
+		
+		final ServerSocket serverSocket = new ServerSocket(PORT);
 		
 		startButton.addActionListener(new ActionListener()
 		{
@@ -63,24 +65,14 @@ public class Server
 				serverStatus.setText("Server running, waiting for connection..."); //not working, has something to do with server.accept()
 				try
 				{
-					Socket socket = server.accept();
+					server.run();
+					Socket socket = serverSocket.accept();
 					
-					if(socket.isConnected()) //not working for multiple clients
+					if(socket.isConnected()) //not working for multiple clients, I know why though
 					{
 						totalConnections++;
 					}
 					
-					/*
-					java.io.InputStream inputStream = socket.getInputStream();
-					ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-					
-					int readInt = (int) objectInputStream.readObject();
-					
-					for(int i = 0; i < readInt; i++)
-					{
-						totalConnections++;
-					}
-					*/
 					
 					
 					if(totalConnections >= 1)
@@ -104,7 +96,7 @@ public class Server
 			{
 				try
 				{
-					server.close();
+					serverSocket.close();
 					System.out.println("Server has been closed" + "\n");
 					serverStatus.setText("Server has been closed");
 					
@@ -117,6 +109,13 @@ public class Server
 			}
 		});
 		
+		
+	}
+
+	@Override
+	public void run() 
+	{
+		// TODO Auto-generated method stub
 		
 	}
 
